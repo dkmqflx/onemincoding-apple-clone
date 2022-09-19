@@ -35,11 +35,13 @@ a {
 
 .global-nav {
   height: 44px;
+  padding: 0 1rem;
 }
 
 .local-nav {
   height: 52px;
   border-bottom: 1px solid #ddd;
+  padding: 0 1rem;
 }
 
 .global-nav-links,
@@ -73,3 +75,154 @@ a {
 .local-nav-links a:not(.product-name) {
   margin-left: 2em;
 }
+
+.scroll-section {
+  padding-top: 50vh;
+}
+
+#scroll-section-0 h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+
+.main-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3em;
+  font-size: 2.5rem;
+  margin: 5px 0;
+}
+
+.main-message p {
+  line-height: 1.2;
+  font-weight: bold;
+  text-align: center;
+}
+
+.main-message small {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: 1.2rem;
+}
+
+#scroll-section2 .main-message {
+  font-size: 3.5rem;
+}
+
+.description {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.description strong {
+  float: left;
+  margin-right: 0.2em;
+  font-size: 3rem;
+  color: rgb(29, 29, 31);
+}
+
+.desc-message {
+  width: 50%;
+  font-weight: bold;
+}
+
+.pin {
+  width: 1px;
+  height: 100px;
+  background: rgb(29, 29, 31);
+}
+
+/* 
+
+font-size는 rem
+height, margin 같은 것들은 em으로 스타일링하는데 
+그 이유는 폰트 사이즈에 대한 비율을 사용하겠다는 것이다 
+rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기준으로 
+값이 결정되기 때문이다.
+내 폰트사이즈에 비율을 활용할 수 있다는 점 때문에 em을 사용하는 것
+
+*/
+
+.mid-message {
+  padding: 0 1rem;
+  font-size: 2rem;
+  color: #888;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.mid-message strong {
+  color: rgb(29, 29, 31);
+  font-weight: bold;
+}
+
+.canvas-caption {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  padding: 0 1rem;
+  color: #888;
+  font-size: 1.2rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+  color: white;
+  background: darkorange;
+}
+
+@media (min-width: 1024px) {
+  #scroll-section-0 h1 {
+    font-size: 9vw;
+  }
+
+  .main-message {
+    font-size: 4vw;
+  }
+
+  .description {
+    font-size: 2rem;
+  }
+
+  .description strong {
+    font-size: 6rem;
+  }
+
+  #scroll-section-2 .main-message p {
+    font-size: 6vw;
+  }
+
+  .main-message small {
+    font-size: 1.5vw;
+  }
+
+  .desc-message {
+    width: 20%;
+  }
+
+  .mid-message {
+    font-size: 4vw;
+  }
+
+  .canvas-caption {
+    font-size: 2rem;
+  }
+}
+
+/*
+
+rem을 사용하면 root element px에 대한 고정적인 값이 된다 
+vw는 창 크기의 몇 퍼센트인지로 결정된다
+이것은 디자이너의 의도에 따라가겠다는 것 
+창 크기에 상관없이 고정시키고 싶으면 rem 사용
+
+애플은 창 크기에 따라가더라 
+
+*/
