@@ -1,0 +1,75 @@
+@charset 'utf-8';
+
+/* 
+
+CSS코드가 다국어 지원을 하도록 세팅해주는 구문입니다.
+영문으로만 코딩한다면 반드시 필요한 것은 아닌데,
+CSS 코드에 혹시 들어갈지 모르는 영문이나 숫자 외의
+문자를 안전하게 처리하기 위해 넣어주기도 한답니다. 
+
+*/
+
+html {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+}
+
+body {
+  overflow-x: hidden;
+  /* 가로스크롤이 안 생기도록 하기 위함 */
+  color: rgb(29, 29, 31);
+  letter-spacing: -0.05em;
+  /* 자간 줄여준다 */
+  background: white;
+}
+
+p {
+  line-height: 1.6;
+  /* 행간 */
+}
+
+a {
+  color: rgb(29, 29, 31);
+  text-decoration: none;
+}
+
+.global-nav {
+  height: 44px;
+}
+
+.local-nav {
+  height: 52px;
+  border-bottom: 1px solid #ddd;
+}
+
+.global-nav-links,
+.local-nav-links {
+  display: flex;
+  align-items: center;
+  max-width: 1000px;
+  height: 100%;
+  margin: 0 auto;
+  /* 마진을 왼쪽, 오른쪽 모두 사용하기 때문에 
+  가운데 정렬이 된다 */
+}
+
+.global-nav-links {
+  justify-content: space-between;
+}
+
+.local-nav-links .product-name {
+  margin-right: auto;
+  /* margin에 auto를 사용하면 
+  내가 사용할 수 있는 여백을 모두 사용한다 */
+  font-size: 1.4rem;
+  font-weight: bold;
+  /* 폰트 import할 때 400, 900을 했으면 무조건 900으로 된다 */
+}
+
+.local-nav-links a {
+  font-size: 0.8rem;
+}
+
+.local-nav-links a:not(.product-name) {
+  margin-left: 2em;
+}
