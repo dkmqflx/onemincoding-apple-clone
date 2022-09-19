@@ -10,7 +10,7 @@ CSS 코드에 혹시 들어갈지 모르는 영문이나 숫자 외의
 */
 
 html {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 14px;
 }
 
@@ -176,6 +176,21 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
   height: 7rem;
   color: white;
   background: darkorange;
+}
+
+.sticky-elem {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: none;
+}
+
+#show-scene-0 #scroll-section-0 .sticky-elem,
+#show-scene-1 #scroll-section-1 .sticky-elem,
+#show-scene-2 #scroll-section-2 .sticky-elem,
+#show-scene-3 #scroll-section-3 .sticky-elem {
+  display: block;
 }
 
 @media (min-width: 1024px) {
