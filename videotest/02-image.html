@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 500vh;
+      }
+      body.before-load {
+        overflow-y: hidden;
+      }
+      .sample-img {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="before-load">
+    <img class="sample-img" src="../video/002/IMG_7027.JPG" />
+    <!-- sample high 비디오에서 프레임 하나하나를 이미지로 뽑아 냈다
+      16초 짜리를 초당 60 프레임으로 만든 것
+      960개 이미지 사용했다 
+      애플에서도 비디오 대신 이미지를 사용한다
+
+      이미지 이렇게 많이 사용하면 용량 크다
+      하지만 똑같은 화질의 비디오와 비교해 본다면 
+      용량이 더 작은 것을 확인할 수 있다.
+
+      '동영상 프레임 추출' 검색하면 동영상에서 비디오 추출하는 방법 알 수 있다
+    -->
+
+    <script>
+      const imgElem = document.querySelector('.sample-img');
+
+      // 이미지
+      let loadedImageCount = 0;
+      let totalImagesCount = 960;
+      const videoImages = [];
+
+      function loadImages() {
+        for (let i = 0; i < totalImagesCount; i++) {
+          let imgElem = new Image();
+          imgElem.src = `../video/002/IMG_${7027 + i}.JPG`;
+          videoImages.push(imgElem);
+
+          // 한장한장 로드가 끝날 때 마다 실행된다.
+          imgElem.addEventListener('load', function () {
+            loadedImageCount++;
+            console.log(loadedImageCount);
+            if (loadedImageCount === totalImagesCount) {
+              console.log('이미지 로드 완료');
+              init(); // 이미지 로드 완료 후 초기화 함수 실행
+            }
+          });
+        }
+      }
+
+      loadImages();
+
+      let progress;
+      let currentFrame;
+      function init() {
+        document.body.classList.remove('before-load');
+
+        window.addEventListener('scroll', function () {
+          progress =
+            pageYOffset / (document.body.offsetHeight - window.innerHeight); // 스크롤 비율
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+
+          requestAnimationFrame(function () {
+            currentFrame = Math.round((totalImagesCount - 1) * progress);
+            console.log(progress);
+            // 1을 빼주는 것은 960장의 이미지이기 때문에 인덱스가 0 ~ 959이기 때문이다
+            // progress 자체가 소수기 때문에 정수가 나오도록 하기 위해서 반올림해준다
+            // progress가 작은 값에서 점점 더 커지기 때문에
+            // 인덱스 값인 currentFrame 도 점점 더 증가한다
+            imgElem.src = videoImages[currentFrame].src;
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

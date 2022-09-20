@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 500vh;
+      }
+      body.before-load {
+        overflow-y: hidden;
+      }
+      .sample-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="before-load">
+    <canvas class="sample-canvas" width="1920" height="1080"></canvas>
+    <!-- 이렇게 canvas 사용하는게 애플에서 사용하는 방식 -->
+
+    <script>
+      const canvas = document.querySelector('.sample-canvas');
+      const context = canvas.getContext('2d');
+      // 캔버스에서 모든 드로잉 조작을 할 때, 캔버스 객체에 getContext 호출해서, 반환받은 context 객체를 이용해서 조작한다
+
+      const videoImages = [];
+      let totalImagesCount = 960;
+      let progress;
+      let currentFrame;
+
+      function setImages() {
+        for (let i = 0; i < totalImagesCount; i++) {
+          let imgElem = new Image();
+          imgElem.src = `../video/002/IMG_${7027 + i}.JPG`;
+          videoImages.push(imgElem);
+        }
+      }
+
+      function init() {
+        document.body.classList.remove('before-load');
+        context.drawImage(videoImages[0], 0, 0); // 첫번째 이미지를 그려주고 시작한다, 오렌지색 잔상이 있는 이미지
+
+        window.addEventListener('scroll', function () {
+          progress =
+            pageYOffset / (document.body.offsetHeight - window.innerHeight);
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+
+          currentFrame = Math.round((totalImagesCount - 1) * progress);
+          context.drawImage(videoImages[currentFrame], 0, 0); // 이미지를 캔버스에 그려준다
+        });
+      }
+
+      window.addEventListener('load', init);
+      setImages();
+    </script>
+  </body>
+</html>

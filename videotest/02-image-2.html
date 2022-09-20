@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 500vh;
+      }
+      body.before-load {
+        overflow-y: hidden;
+      }
+      .sample-img {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="before-load">
+    <img class="sample-img" src="../video/002/IMG_7027.JPG" />
+
+    <script>
+      const imgElem = document.querySelector('.sample-img');
+      const videoImages = [];
+      let totalImagesCount = 960;
+      let progress;
+      let currentFrame;
+
+      // 02-image.html에서 한장한장 로드가 끝날 때 마다 로드 이벤트 실행한 과정 없다
+
+      function setImages() {
+        for (let i = 0; i < totalImagesCount; i++) {
+          let imgElem = new Image();
+          imgElem.src = `../video/002/IMG_${7027 + i}.JPG`;
+          videoImages.push(imgElem);
+        }
+      }
+
+      function init() {
+        document.body.classList.remove('before-load');
+
+        window.addEventListener('scroll', function () {
+          progress =
+            pageYOffset / (document.body.offsetHeight - window.innerHeight);
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+
+          requestAnimationFrame(function () {
+            currentFrame = Math.round((totalImagesCount - 1) * progress);
+            imgElem.src = videoImages[currentFrame].src;
+          });
+        });
+      }
+
+      // window 전역객체에서 로드해 준다
+      // 이미지를 포함해서 문서에서 사용하면 모든 리소스가 로드가 될 때 까지 기다렸다가
+      // init 함수를 실행한다
+
+      // 02-image.html에서 한장한장 로드가 끝날 때 마다 로드 이벤트 실행한다면
+      // 이미지 하나하나 컨트롤할 수 있다
+      window.addEventListener('load', init);
+      setImages();
+    </script>
+  </body>
+</html>
