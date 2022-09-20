@@ -96,6 +96,10 @@ a {
 #scroll-section-0 h1 {
   font-size: 4rem;
   text-align: center;
+  position: relative;
+  z-index: 5;
+  top: -10vh;
+  /* padding도 view port 단위 썼으므로 */
 }
 
 .main-message {

@@ -24,6 +24,7 @@
       values: {
         videoImageCount: 300,
         imageSequence: [0, 299], // 특정 구간이 아닌 처음부터 끝까지 재생되기 때문에 start, end 없다
+        canvas_opacity: [1, 0, { start: 0.9, end: 1 }], // scene이 끝날 때 사라지도록 값 설정
         messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 전체 스크롤의 비율을 1로 봤을 때의 비율
         messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
         messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -250,6 +251,10 @@
           calcValues(values.imageSequence, currentYOffset)
         );
         objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+        objs.canvas.style.opacity = calcValues(
+          values.canvas_opacity,
+          currentYOffset
+        );
 
         if (scrollRatio <= 0.22) {
           // in
@@ -439,7 +444,10 @@
     scrollLoop();
   });
   window.addEventListener('resize', setLayoyt);
-  window.addEventListener('load', setLayoyt); // 새로고침 했을 때 처리해주기 위함
+  window.addEventListener('load', () => {
+    setLayoyt; // 새로고침 했을 때 처리해주기 위함
+    sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+  });
   // DOMContentLoaded는 load가 이미지 파일들을 포함해서 모든 파일이 로드되면 실행되는 것고 ㅏ달리
   // html 객체들만 로드가 끝나면 바로 실행된다
   // 따라서 실행시점이 더 빠르다는 장점 있다
