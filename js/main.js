@@ -17,8 +17,13 @@
         messageB: document.querySelector('#scroll-section-0 .main-message.b'),
         messageC: document.querySelector('#scroll-section-0 .main-message.c'),
         messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+        canvas: document.querySelector('#vidoe-canvas-0'),
+        context: document.querySelector('#vidoe-canvas-0').getContext('2d'),
+        videoImages: [],
       }, // DOM 객체 요소
       values: {
+        videoImageCount: 300,
+        imageSequence: [0, 299], // 특정 구간이 아닌 처음부터 끝까지 재생되기 때문에 start, end 없다
         messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 전체 스크롤의 비율을 1로 봤을 때의 비율
         messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
         messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -95,6 +100,17 @@
       values: {},
     },
   ];
+
+  function setCanvasImage() {
+    let imgElem;
+    for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+      imgElem = new Image();
+      imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
+      sceneInfo[0].objs.videoImages.push(imgElem);
+    }
+  }
+
+  setCanvasImage();
 
   function setLayoyt() {
     // 각 스크롤 섹션의 높이 세팅
@@ -218,6 +234,11 @@
 
     switch (currentScene) {
       case 0:
+        let sequence = Math.round(
+          calcValues(values.imageSequence, currentYOffset)
+        );
+        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+
         if (scrollRatio <= 0.22) {
           // in
           objs.messageA.style.opacity = calcValues(

@@ -41,6 +41,7 @@ a {
   width: 100%;
   height: 44px;
   padding: 0 1rem;
+  z-index: 10;
 }
 
 .local-nav {
@@ -53,6 +54,7 @@ a {
   height: 52px;
   border-bottom: 1px solid #ddd;
   padding: 0 1rem;
+  z-index: 11;
 }
 
 .global-nav-links,
@@ -207,6 +209,11 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
   left: 0;
   width: 100%;
   display: none;
+}
+
+.sticky-elem-canvas {
+  top: 0;
+  background: #ccc;
 }
 
 #show-scene-0 #scroll-section-0 .sticky-elem,
