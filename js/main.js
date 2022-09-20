@@ -137,6 +137,18 @@
       }
     }
     document.body.setAttribute('id', `show-scene-${currentScene}`);
+
+    const heightRatio = window.innerHeight / 1080; // 윈도우의 창 높이 / 원래 캔버스 높이
+    // console.log(heightRatio);, 창크기에 맞는 비율을 구해주고. 그 비율에 맞게 scale을 키워준다.
+    sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
+
+    /**
+     * css의 .sticky-elem-canvas canvas 를 통해서 top 50%, left 50%으로 이동시킨 상태이다
+     * translate에서의 %는, 내 자신의 크기가 기준이 된다
+     * 만약 폭 1000px 높이 1000px인 요소라면
+     * translate(-50%, -50%)는 픽셀로 한다면  translate(-500px, -500px)이 된다.
+     *
+     */
   }
 
   setLayoyt();
