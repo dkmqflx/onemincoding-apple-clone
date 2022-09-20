@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 500vh;
+        /* 스크롤이 가능하도록 하기 위해서  */
+      }
+      body.before-load {
+        overflow-y: hidden;
+      }
+      .sample-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="before-load">
+    <video class="sample-video" src="../video/sample-low.mp4" muted></video>
+    <!-- <video class="sample-video" src="../video/sample-high.mp4" muted></video> -->
+    <!-- high 비디오를 사용하면 엄청 버벅거린다 -->
+
+    <script>
+      const videoElem = document.querySelector('.sample-video');
+      let progress;
+      let currentFrame;
+      function init() {
+        document.body.classList.remove('before-load');
+
+        window.addEventListener('scroll', function () {
+          progress =
+            pageYOffset / (document.body.offsetHeight - window.innerHeight);
+
+          // 스크롤 가능한 범위는 전체 요소의 높이에서 화면에 보여지는 스크린의 크기를 빼준 값이다
+          // 즉 스크롤을 가장 아래로 내리게 되면 더 이상 내릴 수 없기 때문에
+          // 전체 요소의 높이에서 화면에 보여지는 스크린의 높이를 빼주는 것이다
+          console.log(progress);
+
+          // 안전장치, mobile bounce 효과 때문에 범위가 벗어날 것을 대비하기 위함
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+
+          videoElem.currentTime = videoElem.duration * progress;
+        });
+      }
+
+      window.addEventListener('load', init);
+    </script>
+  </body>
+</html>
