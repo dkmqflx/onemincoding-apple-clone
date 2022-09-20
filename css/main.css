@@ -105,6 +105,7 @@ a {
   font-size: 2.5rem;
   margin: 5px 0;
   opacity: 0;
+  top: 35vh;
 }
 
 .main-message p {
@@ -193,7 +194,6 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
 .sticky-elem {
   position: fixed;
-  top: 0;
   left: 0;
   width: 100%;
   display: none;

@@ -19,7 +19,12 @@
         messageD: document.querySelector('#scroll-section-0 .main-message.d'),
       }, // DOM 객체 요소
       values: {
-        messageA_opacity: [0, 1],
+        messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 전체 스크롤의 비율을 1로 봤을 때의 비율
+        messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+
+        // messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
+        messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
       },
     },
 
@@ -129,9 +134,36 @@
     let rv;
 
     // 현재 씬(스크롤섹션)에서 스크롤 된 범위를 비율로 구하기
-    let scrollRatio = currentYOffset / sceneInfo[currentScene].scrollHeight;
+    const scrollHeight = sceneInfo[currentScene].scrollHeight;
+    const scrollRatio = currentYOffset / scrollHeight; // 현재 씬(스크롤섹션)에서 스크롤 된 범위의 비율 값
 
-    rv = scrollRatio * (values[1] - values[0]) + values[0]; // 값의 전체 범위에 곱해주고 초기값을 더해준다
+    if (values.length === 3) {
+      // start ~ end 사이에 애니메이션 실행
+      // 즉, start ~ end 사이에서 글자가 서서히 분명해진다
+      // 만약 start ~ end 지정되지 않으면, value[0], value[1] 사이에서 글자가 서서히 분명해진다
+      const partScrollStart = values[2].start * scrollHeight;
+      const partScrollEnd = values[2].end * scrollHeight;
+      const partScrollHeight = partScrollEnd - partScrollStart;
+
+      if (
+        currentYOffset >= partScrollStart &&
+        currentYOffset <= partScrollEnd
+      ) {
+        rv =
+          ((currentYOffset - partScrollStart) / partScrollHeight) *
+            (values[1] - values[0]) +
+          values[0];
+        // (currentYOffset - partScrollStart) / partScrollHeight) : start ~ end 사이의 구간에서 얼마나 진행되었는지 구하기 위한 것
+      } else if (currentYOffset < partScrollStart) {
+        rv = values[0];
+      } else if (currentYOffset > partScrollEnd) {
+        rv = values[1];
+      }
+    } else {
+      // 구간이 정해지지 않은 경우
+      rv = scrollRatio * (values[1] - values[0]) + values[0]; // 값의 전체 범위에 곱해주고 초기값을 더해준다
+    }
+
     return rv;
   }
 
@@ -140,17 +172,42 @@
     const values = sceneInfo[currentScene].values;
     const currentYOffset = yOffset - prevScrollHeight; // currentYOffset는 현재 씬에서 얼마나 스크롤 되었는지에 대한 값
 
-    console.log(currentScene);
+    const scrollHeight = sceneInfo[currentScene].scrollHeight;
+    const scrollRatio = currentYOffset / scrollHeight; //  현재 씬에서 얼마나 스크롤 되었는지에 대한 비율
 
     switch (currentScene) {
       case 0:
-        let messageA_opacity_in = calcValues(
-          values.messageA_opacity,
+        const messageA_opacity_in = calcValues(
+          values.messageA_opacity_in,
           currentYOffset
         );
-        objs.messageA.style.opacity = messageA_opacity_in;
 
-        console.log(messageA_opacity_in);
+        const messageA_opacity_out = calcValues(
+          values.messageA_opacity_out,
+          currentYOffset
+        );
+
+        const messageA_translateY_in = calcValues(
+          values.messageA_translateY_in,
+          currentYOffset
+        );
+
+        const messageA_translateY_out = calcValues(
+          values.messageA_translateY_out,
+          currentYOffset
+        );
+
+        console.log(messageA_translateY_in);
+
+        if (scrollRatio <= 0.22) {
+          // in
+          objs.messageA.style.opacity = messageA_opacity_in;
+          objs.messageA.style.transform = `translateY(${messageA_translateY_in}%)`;
+        } else {
+          // out
+          objs.messageA.style.opacity = messageA_opacity_out;
+          objs.messageA.style.transform = `translateY(${messageA_translateY_out}%)`;
+        }
 
         break;
       case 1:
