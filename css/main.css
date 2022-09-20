@@ -161,6 +161,16 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
 */
 
+#scroll-section-2 .b {
+  top: 10%;
+  left: 40%;
+}
+
+#scroll-section-2 .c {
+  top: 15%;
+  left: 45%;
+}
+
 .mid-message {
   padding: 0 1rem;
   font-size: 2rem;
@@ -233,6 +243,15 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
   .desc-message {
     width: 20%;
+  }
+
+  #scroll-section-2 .b {
+    top: 20%;
+    left: 53%;
+  }
+
+  #scroll-section-2 .c {
+    left: 55%;
   }
 
   .mid-message {
