@@ -112,7 +112,10 @@
         ],
         images: [],
       },
-      values: {},
+      values: {
+        rect1X: [0, 0, { start: 0, end: 0 }], // 왼쪽 X 좌표, 미리 정할 수 없기에 0으로 일단 세팅
+        rect2X: [0, 0, { start: 0, end: 0 }], // 오른쪽 X 좌표
+      },
     },
   ];
 
@@ -490,14 +493,74 @@
         // 비율에 따라 캔버스의 크기 조절을 해준다
         // 어떤 경우에도 캔버스가 브라우저에 꽉 차게 해주기 위해서
         if (widthRatio <= heightRatio) {
-          // 캔버스보다 브라우저 창이 홀쭉한 경우 - 브라우저가 캔버스에 비해 세로가 더 길다
+          // 캔버스보다 브라우저 창이 홀쭉한 경우 - 브라우저가 캔버스에 비해 가로 대비 세로가 더 길다
           canvasScaleRatio = heightRatio;
         } else {
-          // 캔버스보다 브라우저 창이 납작한 경우 - 브라우저가 캔버스에 비해 가로가 더 길다
+          // 캔버스보다 브라우저 창이 납작한 경우 - 브라우저가 캔버스에 비해 세로 대비 가로가 더 길다
           canvasScaleRatio = widthRatio;
         }
         objs.canvas.style.transform = `scale(${canvasScaleRatio})`;
+        // 만약 canvasScaleRatio = heightRatio; 라면
+        // heightRatio에 맞춰서 scale을 가로, 세로로 키워주기 때문에 세로 크기는 브라우저와 캔버스가 맞고
+        // 가로 크기는 캔버스가 더 길어진다
+        // 그 이유는 canvasScaleRatio = widthRatio 값은 canvasScaleRatio = heightRatio; 보다 더 작기 때문이다
+        // 예를들어 widthRatio = 0.5, heightRatio = 0.7 인 경우, 가로,세로 모두 0.7 만큼 커지기 때문에
+        // 가로로는 캔버스가 더 커지는 것이다
+
         objs.context.drawImage(objs.images[0], 0, 0);
+
+        // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+
+        // 즉, 위에서 구한 canvasScaleRatio 만큼 곱해주어서 canvas 크기를 조정해 준 상태이다.
+        // 따라서 canvasScaleRatio를 나누어서 양 옆의 흰색 영역을 그리기 위한 새로운 canvas를 구해주는 것이다
+
+        /**
+         * 현재 캔버스의 높이가 창 높이에 딱 맞도록 조정되어 있는데요,
+         * 만약 세로로 홀쭉한 스마트폰에 저 캔버스를 채운다면 캔버스의 좌우는 잘리게 되겠지요?
+         * 그런데 좌우에 그려질 하얀 박스는 캔버스의 양 끝이 아니라,
+         * 우리 눈에 보이는 캔버스 영역의 좌우 끝에 배치되어야 하므로
+         * 그 계산을 위해서 현재 창 사이즈와 같은 비율의 캔버스 크기를 설정한다고 생각하시면 됩니다.
+         *
+         * 즉, 흰색 너비 또한 캔버스에 포함되기 때문에 이를 위해서 새로운 캔버스를 구해주어야 하기 때문에
+         * canvasScaleRatio를 나누어서 새로운 width, Height를 구해주는 것이다
+         *
+         * 따라서, 창 사이즈와 같은 비율의 캔버스 크기를 구하는 것이 바로 아래
+         * recalculatedInnerWidth, recalculatedInnerHeight 이다.
+         *
+         */
+
+        // https://www.inflearn.com/course/%EC%95%A0%ED%94%8C-%EC%9B%B9%EC%82%AC%EC%9D%B4%ED%8A%B8-%EC%9D%B8%ED%84%B0%EB%9E%99%EC%85%98-%ED%81%B4%EB%A1%A0/unit/42821?category=questionDetail&tab=community&q=54063
+
+        // 캔버스를 위에서 줄이는데 canvasScaleRatio를 곱해서 사용했으므로
+        // window.innerWidth, window.innerHeight에 canvasScaleRatio를 나누어주면,
+        // window.innerWidth, window.innerHeight 비율에 맞는 새로운 캔버스를 만들 수 있다.
+
+        const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+        const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+        const whiteRectWidth = recalculatedInnerWidth * 0.15; // 흰색 박스의 너비
+
+        // index 0은 흰색 박스 이동하기전 초기값
+        values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
+        values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+        values.rect2X[0] =
+          values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+        values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+        // 좌우 흰색 박스 그리기
+        objs.context.fillRect(
+          values.rect1X[0], // x
+          0, //y
+          parseInt(whiteRectWidth), // width, parseInt 해준 것은, 캔버스에서 정수로 해주면 그릴 때 성능이 좀 더 좋아지기 때문
+          objs.canvas.height // height: ;
+        );
+        objs.context.fillRect(
+          values.rect2X[0],
+          0,
+          parseInt(whiteRectWidth),
+          objs.canvas.height
+        );
+
         break;
     }
   }
