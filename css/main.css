@@ -91,6 +91,7 @@ a {
 
 .scroll-section {
   padding-top: 50vh;
+  position: relative;
 }
 
 #scroll-section-0 h1 {

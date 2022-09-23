@@ -115,6 +115,7 @@
       values: {
         rect1X: [0, 0, { start: 0, end: 0 }], // 왼쪽 X 좌표, 미리 정할 수 없기에 0으로 일단 세팅
         rect2X: [0, 0, { start: 0, end: 0 }], // 오른쪽 X 좌표
+        rectStartY: 0,
       },
     },
   ];
@@ -506,7 +507,7 @@
         // 그 이유는 canvasScaleRatio = widthRatio 값은 canvasScaleRatio = heightRatio; 보다 더 작기 때문이다
         // 예를들어 widthRatio = 0.5, heightRatio = 0.7 인 경우, 가로,세로 모두 0.7 만큼 커지기 때문에
         // 가로로는 캔버스가 더 커지는 것이다
-
+        objs.context.fillStyle = 'white';
         objs.context.drawImage(objs.images[0], 0, 0);
 
         // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
@@ -535,8 +536,40 @@
         // window.innerWidth, window.innerHeight에 canvasScaleRatio를 나누어주면,
         // window.innerWidth, window.innerHeight 비율에 맞는 새로운 캔버스를 만들 수 있다.
 
-        const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+        // const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+        // const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+        // 브라우저에서 스크롤바를 뺀 값을 구한 값을 구하기 위해
+        // 위의 window.innerWidth 값을 사용하면 화면에 캔버스가 꽉 차도 위에 빈 부분이 남아있게 된다.
+        const recalculatedInnerWidth =
+          document.body.offsetWidth / canvasScaleRatio;
         const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+        // 값이 설정되어 있지 않을 때만 실행되서, 세팅이 한번만 되도록 한다
+        if (!values.rectStartY) {
+          // section 3가 등장할 때 Y 위치
+          // 스크롤 이벤트가 발생할 때 위치를 잡아낸다
+          // 따라서 스크롤 속도에 따라서 값이 변하게 된다.
+          // 스크롤 속도에 상관없이 top이 인식되는 것을 같도록 해주어야 한다
+          // values.rectStartY = objs.canvas.getBoundingClientRect().top;
+
+          // offsetTop은 문서의 처음이 기준이다
+          // 따라서 고정된 값을 가지므로 스크롤 속도에 상관없이 같은 값을 가진다
+          // 이 때, 부모 요소의 position을 relative로 지정해주면,
+          // 문서의 처음이 아닌 부모 요소를 기준으로 offsetTop 값을 가지게 된다
+          // 하지만 transform으로 scale이 줄어들기전의 크기를 기준으로 할 때의 offsetTop 값
+          // 따라서 캔버스가 줄어든 것 만큼의 높이를 더해주어야 한다
+
+          values.rectStartY =
+            objs.canvas.offsetTop +
+            (objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2;
+
+          values.rect1X[2].start = window.innerHeight / 2 / scrollHeight;
+          values.rect2X[2].start = window.innerHeight / 2 / scrollHeight;
+
+          values.rect1X[2].end = values.rectStartY / scrollHeight; // scrollHeight : 현재 씬에서 얼마나 스크롤했는지
+          values.rect2X[2].end = values.rectStartY / scrollHeight;
+        }
 
         const whiteRectWidth = recalculatedInnerWidth * 0.15; // 흰색 박스의 너비
 
@@ -547,15 +580,17 @@
           values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
         values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
 
+        console.log(values.rect1X);
+
         // 좌우 흰색 박스 그리기
         objs.context.fillRect(
-          values.rect1X[0], // x
+          parseInt(calcValues(values.rect1X, currentYOffset)), // x
           0, //y
           parseInt(whiteRectWidth), // width, parseInt 해준 것은, 캔버스에서 정수로 해주면 그릴 때 성능이 좀 더 좋아지기 때문
           objs.canvas.height // height: ;
         );
         objs.context.fillRect(
-          values.rect2X[0],
+          parseInt(calcValues(values.rect2X, currentYOffset)), // x
           0,
           parseInt(whiteRectWidth),
           objs.canvas.height
