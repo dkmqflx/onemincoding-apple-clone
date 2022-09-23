@@ -115,6 +115,8 @@
       values: {
         rect1X: [0, 0, { start: 0, end: 0 }], // 왼쪽 X 좌표, 미리 정할 수 없기에 0으로 일단 세팅
         rect2X: [0, 0, { start: 0, end: 0 }], // 오른쪽 X 좌표
+        blendHeight: [0, 0, { start: 0, end: 0 }], // 두번째 보여질 이미지
+        canvas_scale: [0, 0, { start: 0, end: 0 }],
         rectStartY: 0,
       },
     },
@@ -692,6 +694,25 @@
           // 캔버스가 브라우저 상단에 닿은 이후
           step = 2;
           // 이미지 블랜드
+          values.blendHeight[0] = 0;
+          values.blendHeight[1] = objs.canvas.height;
+          values.blendHeight[2].start = values.rect1X[2].end;
+          values.blendHeight[2].end = values.rect1X[2].start + 0.2; // end 크게하면 스크롤 많이해야 하고, 작게하면 스크롤 조금만 하면 된다
+          const blendHeight = calcValues(values.blendHeight, currentYOffset);
+
+          objs.context.drawImage(
+            objs.images[1],
+            0,
+            objs.canvas.height - blendHeight,
+            objs.canvas.width,
+            blendHeight,
+
+            0,
+            objs.canvas.height - blendHeight,
+            objs.canvas.width,
+            blendHeight
+          );
+
           objs.canvas.classList.add('sticky');
 
           // css의 .image-blend-canvas.sticky 클래스에서 top을 0으로 지정했어도 위에 딱 붙지 않는데
@@ -700,6 +721,21 @@
           objs.canvas.style.top = `${
             -(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2
           }px`;
+
+          if (scrollRatio > values.blendHeight[2].end) {
+            values.canvas_scale[0] = canvasScaleRatio;
+            values.canvas_scale[1] =
+              document.body.offsetWidth / (1.5 * objs.canvas.width);
+            // 분수니까 분모의 값을 증가시켜서 결과값을 작게 만듬
+
+            values.canvas_scale[2].start = values.blendHeight[2].end;
+            values.canvas_scale[2].end = values.blendHeight[2].start + 0.2;
+
+            objs.canvas.style.transform = `scale(${calcValues(
+              values.canvas_scale,
+              currentYOffset
+            )})`;
+          }
         }
 
         break;
