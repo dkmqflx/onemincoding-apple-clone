@@ -574,6 +574,8 @@
         break;
 
       case 3:
+        let step = 0;
+
         // 가로 , 세로 모두 꽉 차게 하기 위해서 여기서 세팅 (계산 필요)
         const widthRatio = window.innerWidth / objs.canvas.width;
         const heightRatio = window.innerHeight / objs.canvas.height;
@@ -681,6 +683,24 @@
           parseInt(whiteRectWidth),
           objs.canvas.height
         );
+
+        // 캔버스가 브라우저 상단에 닿지 않았다면
+        if (scrollRatio < values.rect1X[2].end) {
+          step = 1;
+          objs.canvas.classList.remove('sticky');
+        } else {
+          // 캔버스가 브라우저 상단에 닿은 이후
+          step = 2;
+          // 이미지 블랜드
+          objs.canvas.classList.add('sticky');
+
+          // css의 .image-blend-canvas.sticky 클래스에서 top을 0으로 지정했어도 위에 딱 붙지 않는데
+          // 그 이유는 scale을 사용해서 캔버스 크기를 줄였는데, 원래 캔버스의 크기에 맞게 top이 적용되기 때문이다
+          // 따라서 아래처럼 scale로 줄어든 캔버스에 맞게 top을 지정해준다
+          objs.canvas.style.top = `${
+            -(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2
+          }px`;
+        }
 
         break;
     }

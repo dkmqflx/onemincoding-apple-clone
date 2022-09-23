@@ -234,6 +234,10 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
   display: block;
 }
 
+.image-blend-canvas.sticky {
+  position: fixed;
+  top: 0;
+}
 #scroll-section-3 {
   display: flex;
   flex-direction: column;
