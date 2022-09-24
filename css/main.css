@@ -193,7 +193,7 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
 .canvas-caption {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: -8em auto 0;
 
   padding: 0 1rem;
   color: #888;
@@ -266,6 +266,7 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
   .description {
     font-size: 2rem;
+    padding: 0;
   }
 
   .description strong {
@@ -294,11 +295,14 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
   }
 
   .mid-message {
+    width: 1000px;
     font-size: 4vw;
+    padding: 0;
   }
 
   .canvas-caption {
     font-size: 2rem;
+    padding: 0;
   }
 }
 

@@ -117,6 +117,8 @@
         rect2X: [0, 0, { start: 0, end: 0 }], // 오른쪽 X 좌표
         blendHeight: [0, 0, { start: 0, end: 0 }], // 두번째 보여질 이미지
         canvas_scale: [0, 0, { start: 0, end: 0 }],
+        canvasCaption_opacity: [0, 1, { start: 0, end: 0 }],
+        canvasCaption_translateY: [20, 0, { start: 0, end: 0 }],
         rectStartY: 0,
       },
     },
@@ -655,10 +657,8 @@
           values.rectStartY =
             objs.canvas.offsetTop +
             (objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2;
-
           values.rect1X[2].start = window.innerHeight / 2 / scrollHeight;
           values.rect2X[2].start = window.innerHeight / 2 / scrollHeight;
-
           values.rect1X[2].end = values.rectStartY / scrollHeight; // scrollHeight : 현재 씬에서 얼마나 스크롤했는지
           values.rect2X[2].end = values.rectStartY / scrollHeight;
         }
@@ -673,14 +673,15 @@
         values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
 
         // 좌우 흰색 박스 그리기
+
         objs.context.fillRect(
-          parseInt(calcValues(values.rect1X, currentYOffset)), // x
-          0, //y
+          parseInt(calcValues(values.rect1X, currentYOffset)),
+          0,
           parseInt(whiteRectWidth), // width, parseInt 해준 것은, 캔버스에서 정수로 해주면 그릴 때 성능이 좀 더 좋아지기 때문
-          objs.canvas.height // height: ;
+          objs.canvas.height
         );
         objs.context.fillRect(
-          parseInt(calcValues(values.rect2X, currentYOffset)), // x
+          parseInt(calcValues(values.rect2X, currentYOffset)),
           0,
           parseInt(whiteRectWidth),
           objs.canvas.height
@@ -694,10 +695,11 @@
           // 캔버스가 브라우저 상단에 닿은 이후
           step = 2;
           // 이미지 블랜드
+
           values.blendHeight[0] = 0;
           values.blendHeight[1] = objs.canvas.height;
           values.blendHeight[2].start = values.rect1X[2].end;
-          values.blendHeight[2].end = values.rect1X[2].start + 0.2; // end 크게하면 스크롤 많이해야 하고, 작게하면 스크롤 조금만 하면 된다
+          values.blendHeight[2].end = values.blendHeight[2].start + 0.2; // end 크게하면 스크롤 많이해야 하고, 작게하면 스크롤 조금만 하면 된다
           const blendHeight = calcValues(values.blendHeight, currentYOffset);
 
           objs.context.drawImage(
@@ -706,7 +708,6 @@
             objs.canvas.height - blendHeight,
             objs.canvas.width,
             blendHeight,
-
             0,
             objs.canvas.height - blendHeight,
             objs.canvas.width,
@@ -723,6 +724,7 @@
           }px`;
 
           // 축소 시작
+
           if (scrollRatio > values.blendHeight[2].end) {
             values.canvas_scale[0] = canvasScaleRatio;
             values.canvas_scale[1] =
@@ -732,7 +734,7 @@
             // 두번째 이미지가 보여지는 애니메이션의 최종 값
 
             values.canvas_scale[2].start = values.blendHeight[2].end;
-            values.canvas_scale[2].end = values.blendHeight[2].start + 0.2;
+            values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2;
 
             objs.canvas.style.transform = `scale(${calcValues(
               values.canvas_scale,
@@ -744,7 +746,7 @@
           // values.canvas_scale[2].end가 세팅이 되고 0이 아닌 순간에 실행된다
           if (
             scrollRatio > values.canvas_scale[2].end &&
-            scrollRatio > values.canvas_scale[2].end > 0
+            values.canvas_scale[2].end > 0
           ) {
             objs.canvas.classList.remove('sticky'); // fixed 된 것을 다시 되돌려준다.
 
@@ -753,8 +755,29 @@
             // values.blendHeight[2].end = values.rect1X[2].start + 0.2; //  0.2 동안 이미지 블렌드 처리
             // values.canvas_scale[2].end = values.blendHeight[2].start + 0.2; // 0.2 동안 축소 처리
             // 따라서 0.4 동안 스크롤 된 것이므로 아래 0.4가 된다
-
             objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;
+
+            values.canvasCaption_opacity[2].start = values.canvas_scale[2].end; // canvas scale 끝났을 때 시작
+            values.canvasCaption_opacity[2].end =
+              values.canvasCaption_opacity[2].start + 0.1;
+
+            // canvas scale 끝났을 때 시작
+
+            values.canvasCaption_translateY[2].start =
+              values.canvasCaption_opacity[2].start;
+
+            values.canvasCaption_translateY[2].end =
+              values.canvasCaption_opacity[2].end;
+            objs.canvasCaption.style.opacity = calcValues(
+              values.canvasCaption_opacity,
+              currentYOffset
+            );
+            objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(
+              values.canvasCaption_translateY,
+              currentYOffset
+            )}%, 0)`;
+          } else {
+            objs.canvasCaption.style.opacity = values.canvasCaption_opacity[0];
           }
         }
 
