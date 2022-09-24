@@ -722,11 +722,14 @@
             -(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2
           }px`;
 
+          // 축소 시작
           if (scrollRatio > values.blendHeight[2].end) {
             values.canvas_scale[0] = canvasScaleRatio;
             values.canvas_scale[1] =
               document.body.offsetWidth / (1.5 * objs.canvas.width);
+            // 브라우저의 폭 보다 작게 만들어준다
             // 분수니까 분모의 값을 증가시켜서 결과값을 작게 만듬
+            // 두번째 이미지가 보여지는 애니메이션의 최종 값
 
             values.canvas_scale[2].start = values.blendHeight[2].end;
             values.canvas_scale[2].end = values.blendHeight[2].start + 0.2;
@@ -735,6 +738,23 @@
               values.canvas_scale,
               currentYOffset
             )})`;
+            objs.canvas.style.marginTop = 0; // 스크롤했다가 다시 올릴 때 갑자기 사라지는 문제 해결하기 위해
+          }
+
+          // values.canvas_scale[2].end가 세팅이 되고 0이 아닌 순간에 실행된다
+          if (
+            scrollRatio > values.canvas_scale[2].end &&
+            scrollRatio > values.canvas_scale[2].end > 0
+          ) {
+            objs.canvas.classList.remove('sticky'); // fixed 된 것을 다시 되돌려준다.
+
+            // 두번째 이미지 보이다가 다시 줄어들도록 하기 위해서 마진을 줘서 멈추도록 한다.
+            // 위의 코드를 보면,
+            // values.blendHeight[2].end = values.rect1X[2].start + 0.2; //  0.2 동안 이미지 블렌드 처리
+            // values.canvas_scale[2].end = values.blendHeight[2].start + 0.2; // 0.2 동안 축소 처리
+            // 따라서 0.4 동안 스크롤 된 것이므로 아래 0.4가 된다
+
+            objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;
           }
         }
 
