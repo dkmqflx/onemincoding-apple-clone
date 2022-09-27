@@ -243,6 +243,7 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem {
   display: block;
+  will-change: transform, opacity;
 }
 
 .image-blend-canvas.sticky {
