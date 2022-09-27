@@ -257,6 +257,9 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
   display: block;
   will-change: transform, opacity;
 }
+.scroll-effect-end .sticky-elem {
+  display: none !important;
+}
 
 .image-blend-canvas.sticky {
   position: fixed;
@@ -296,6 +299,10 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
 .before-load .loading {
   opacity: 1;
+}
+
+.normal-content {
+  margin-bottom: 10rem;
 }
 
 @keyframes loading-spin {

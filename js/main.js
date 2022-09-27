@@ -213,6 +213,13 @@
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
 
+    if (
+      delayedYOffset <
+      prevScrollHeight + sceneInfo[currentScene].scrollHeight
+    ) {
+      document.body.classList.add('scroll-effect-end');
+    }
+
     // 스크롤이 내려갈 때
     // 현재 스클로한 위치가 이전 섹션까지 스크롤 높이 값의 합과 현재 섹션의 스크롤 값을 합한 것 보다 큰 경우, 씬이 바뀐다
     if (
@@ -220,7 +227,15 @@
       prevScrollHeight + sceneInfo[currentScene].scrollHeight
     ) {
       enterNewScene = true;
-      currentScene++;
+
+      if (currentScene === sceneInfo.length - 1) {
+        document.body.classList.add('scroll-effect-end');
+      }
+
+      if (currentScene < sceneInfo.length - 1) {
+        currentScene++;
+      }
+
       document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
 
