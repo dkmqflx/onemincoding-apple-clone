@@ -23,6 +23,10 @@ body {
   background: white;
 }
 
+body.before-load {
+  overflow: hidden;
+}
+
 p {
   line-height: 1.6;
   /* 행간 */
