@@ -23,6 +23,15 @@ body {
   background: white;
 }
 
+.container {
+  /* 아이폰에서 가로스크롤 방지 */
+  overflow: hidden;
+}
+
+.before-load .container {
+  display: none;
+}
+
 body.before-load {
   overflow: hidden;
 }
@@ -66,6 +75,9 @@ a {
   top: 0;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: saturate(180%) blur(15px);
+  -webkit-backdrop-filter: saturate(180%) blur(15px);
+  -moz-backdrop-filter: saturate(180%) blur(15px);
+  -o-backdrop-filter: saturate(180%) blur(15px);
 }
 
 .global-nav-links,
@@ -204,7 +216,7 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
 
 .canvas-caption {
   max-width: 1000px;
-  margin: -8em auto 0;
+  margin: -24rem auto 0;
 
   padding: 0 1rem;
   color: #888;
@@ -370,6 +382,7 @@ rem을 사용하면 현재 포트사이즈에 상관없이 root element를 기�
   }
 
   .canvas-caption {
+    margin-top: -8rem;
     font-size: 2rem;
     padding: 0;
   }
